@@ -1,19 +1,17 @@
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import "./header.css";
 const Header = () => {
   //anchor  viết tắt là a
   return (
     <ul>
       <li>
-        <Link class="active" to="/">
-          Home
-        </Link>
+        <NavLink to="/">Home</NavLink>
       </li>
       <li>
-        <Link to="/users">User</Link>
+        <NavLink to="/users">User</NavLink>
       </li>
       <li>
-        <Link to="/products">Product</Link>
+        <NavLink to="/products">Product</NavLink>
       </li>
     </ul>
   );
