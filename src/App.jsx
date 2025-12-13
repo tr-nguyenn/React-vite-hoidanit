@@ -18,8 +18,22 @@ const App = () => {
   };
 
   const addNewToDo = (name) => {
-    alert(`Call me ${name}`);
+    const newTodo = {
+      id: getRandomInt(1, 1000000),
+      name: name,
+    };
+
+    setTodoList([...todoList, newTodo]);
+    // todoList.push(newTodo);
+    // setTodoList(todoList);
+    //array.push //sử dụng trong hệ thống lớn có thể gây bug
   };
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   //{key:value}
   return (
