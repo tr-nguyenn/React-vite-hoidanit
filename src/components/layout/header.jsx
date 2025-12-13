@@ -1,17 +1,19 @@
+import {Link} from "react-router-dom";
 import "./header.css";
 const Header = () => {
+  //anchor  viết tắt là a
   return (
     <ul>
       <li>
-        <a class="active" href="/">
+        <Link class="active" to="/">
           Home
-        </a>
+        </Link>
       </li>
       <li>
-        <a href="/users">User</a>
+        <Link to="/users">User</Link>
       </li>
       <li>
-        <a href="/products">Product</a>
+        <Link to="/products">Product</Link>
       </li>
     </ul>
   );
