@@ -1,4 +1,4 @@
-const TodoData = (prop) => {
+const TodoData = (props) => {
   //props là một biến object {}
   //   {
   //     name: "Eric";
