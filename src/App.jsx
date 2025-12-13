@@ -22,6 +22,11 @@ const App = () => {
     //array.push //sử dụng trong hệ thống lớn có thể gây bug
   };
 
+  const deleteTodo = (id) => {
+    const newTodo = todoList.filter((item) => item.id !== id);
+    setTodoList(newTodo);
+  };
+
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
@@ -35,7 +40,7 @@ const App = () => {
       <TodoNew addNewToDo={addNewToDo} />
 
       {todoList.length > 0 ? (
-        <TodoData todoList={todoList} />
+        <TodoData todoList={todoList} deleteTodo={deleteTodo} />
       ) : (
         <div className="todo-image">
           <img src={reactLogo} className="logo" />
