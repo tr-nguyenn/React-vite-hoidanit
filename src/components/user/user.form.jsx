@@ -1,7 +1,6 @@
 import {Button, Input, notification, Modal} from "antd";
 import {useState} from "react";
 import {createUserAPI} from "../../services/api.service";
-import {floatButtonPrefixCls} from "antd/es/float-button/FloatButton";
 
 const UserForm = (props) => {
   const {loadUser} = props;
