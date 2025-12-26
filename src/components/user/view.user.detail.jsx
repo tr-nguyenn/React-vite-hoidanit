@@ -1,7 +1,69 @@
-import {Button, Drawer} from "antd";
+import {Button, Drawer, notification} from "antd";
+import {floatButtonPrefixCls} from "antd/es/float-button/FloatButton";
+import {useState} from "react";
+import {
+  handleUploadFile,
+  UpdateUserAvatarAPI,
+} from "../../services/api.service";
 
 const ViewUserDetail = (props) => {
-  const {dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen} = props;
+  const {dataDetail, setDataDetail, isDetailOpen, setIsDetailOpen, loadUser} =
+    props;
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState();
+
+  const handleOnChangeFile = (event) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      setSelectedFile(null);
+      setPreview(null);
+      return;
+    }
+
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
+  const handleUpdateUserAvatar = async () => {
+    //Step 1: upload file
+    const resUpload = await handleUploadFile(selectedFile, "avatar");
+    if (resUpload.data) {
+      //success
+      const newAvatar = resUpload.data.fileUploaded;
+      //Step 2: update user
+      const resUpdateAvatar = await UpdateUserAvatarAPI(
+        newAvatar,
+        dataDetail._id,
+        dataDetail.fullName,
+        dataDetail.phone
+      );
+      if (resUpdateAvatar.data) {
+        setIsDetailOpen(false);
+        setSelectedFile(null);
+        setPreview(null);
+        await loadUser();
+        notification.success({
+          message: "Update user avatar",
+          description: "Cập nhật avatar thành công",
+        });
+      } else {
+        notification.error({
+          message: "Error update avatar",
+          description: JSON.stringify(resUpdateAvatar.message),
+        });
+      }
+    } else {
+      //failed
+      notification.error({
+        message: "Error upload file",
+        description: JSON.stringify(resUpload.message),
+      });
+    }
+  };
+
   return (
     <>
       <Drawer
@@ -26,9 +88,16 @@ const ViewUserDetail = (props) => {
             <br />
             <p>Avatar: </p>
             <br />
-            <div>
+            <div
+              style={{
+                marginTop: "10px",
+                height: "100px",
+                width: "150px",
+                border: "1px solid #ccc",
+              }}
+            >
               <img
-                height={100}
+                style={{height: "100%", width: "100%", objectFit: "contain"}}
                 src={`${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
                   dataDetail.avatar
                 }`}
@@ -49,8 +118,38 @@ const ViewUserDetail = (props) => {
               >
                 Upload Avatar
               </label>
-              <input type="file" hidden id="btnUpload" />
+              <input
+                type="file"
+                hidden
+                id="btnUpload"
+                // onChange={handleOnChange}
+                onChange={(event) => handleOnChangeFile(event)}
+              />
             </div>
+            {preview && (
+              <>
+                <div
+                  style={{
+                    marginTop: "10px",
+                    height: "100px",
+                    marginBottom: "15px",
+                    width: "150px",
+                  }}
+                >
+                  <img
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      objectFit: "contain",
+                    }}
+                    src={preview}
+                  />
+                </div>
+                <Button type="primary" onClick={() => handleUpdateUserAvatar()}>
+                  Save
+                </Button>
+              </>
+            )}
           </>
         ) : (
           <>
